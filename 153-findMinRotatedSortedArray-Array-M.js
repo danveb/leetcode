@@ -63,6 +63,10 @@ Notes: OPTIMAL -> O(log n) using discrete binary search
 
 */ 
 
+// -- IDEA: CHECK IF MID IS AT INFLECTION POINT. 
+// --- IF # LEFT OF MID IS LARGER WE ARE AT MINIMUM. 
+// --- IF # RIGHT OF MID IS SMALLER, THE NUMBER TO THE RIGHT IS MINIMUM. 
+
 function findMin(array) {
     let left = 0
     let right = array.length - 1
