@@ -21,39 +21,50 @@ Scratchpad:
             null   2        => level 2
 
 Notes: using "iteration" we perform BFS to count number of levels in the tree 
-- main check: if root is null we return 0 
-- initialize level/height at 0 (as we traverse the levels we'll increase up to the farthest level) 
+
+Approach: 
+1. Recursively -> Time: O(n) 
+- edge case: if root is null we return 0 (means height of 0) 
+- return maximum between (root.left && root.right) + 1 
+
+2. Iteratively -> Time: O(n) 
+- edge case: if root is null we return 0 (means height of 0) 
+- initialize level/height at 0 (as we traverse the levels we'll increase up to the deepest level) 
 - initialize a QUEUE with the root 
 - keep iterating while our QUEUE has any elements
 - initialize nodeCount as the length of the queue (means we have nodes to visit) 
-- increase levelHeight++ 
-- for each node in the binary tree: 
+- keep increasing height by 1
+- iterate over nodes to traverse (i at 0 until nodeCount) 
 - initialize current as the node shifted from the QUEUE 
-- check: if there are any left children we'll add them to the QUEUE 
-- check: if there are any right children we'll add them to the QUEUE 
-- return level/height 
+- check: if there are any left children we'll push to the QUEUE 
+- check: if there are any right children we'll push to the QUEUE 
+- return level/height
 
 */ 
 
+// Recursively 
+function maxDepthRecursive(root) {
+  // edge case: if root is null we return 0
+  if(!root) return 0 
+  return Math.max(maxDepthRecursive(root.left) && maxDepthRecursive(root.right)) + 1
+}
+
+// Iteratively
 function maxDepth(root) {
-    if(!root) return 0 
-    const queue = [root] 
-    let height = 0 
-    
-    while(queue.length > 0) {
-        let nodeCount = queue.length 
-        height++ 
-        
-        // for loop
-        for(let i = 0; i < nodeCount; i++) {
-            let current = queue.shift() 
-            if(current.left !== null) {
-                queue.push(current.left) 
-            }
-            if(current.right !== null) {
-                queue.push(current.right) 
-            }
-        }
-    }
-    return height; 
+  if(!root) return 0 
+  const queue = [root] 
+  let height = 0 
+  
+  while(queue.length > 0) {
+      let nodeCount = queue.length 
+      height++ 
+      
+      // for loop
+      for(let i = 0; i < nodeCount; i++) {
+          let current = queue.shift() 
+          if(current.left !== null) queue.push(current.left) 
+          if(current.right !== null) queue.push(current.right) 
+      }
+  }
+  return height; 
 }
