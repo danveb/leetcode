@@ -46,7 +46,7 @@ Approach:
 function maxDepthRecursive(root) {
   // edge case: if root is null we return 0
   if(!root) return 0 
-  return Math.max(maxDepthRecursive(root.left) && maxDepthRecursive(root.right)) + 1
+  return Math.max(maxDepthRecursive(root.left), maxDepthRecursive(root.right)) + 1
 }
 
 // Iteratively
