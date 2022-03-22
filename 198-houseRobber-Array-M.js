@@ -28,7 +28,7 @@ Approach DYNAMIC PROGRAMMING -> Time: O(n) / Space: O(1)
 - edge case: if length of nums array is < 2 we return MAX of nums array 
 - initialize dp array as size of nums array and filled with 0's 
 - initialize dp[0] as first element of nums array 
-- initialize dp[1] as second element of nums array
+- initialize dp[1] as MAX nums[0], nums[1]
 - iterate over nums array (from 2nd index onwards until end) 
 - set dp[i] as MAX dp[i-1], nums[i] + dp[i-2]
 - return the last value which is the HIGHEST of dp array 
@@ -42,7 +42,7 @@ function rob(nums) {
     // initialize dp array filled with 0's 
     const dp = Array(nums.length).fill(0) 
     dp[0] = nums[0] 
-    dp[1] = nums[1] 
+    dp[1] = Math.max(nums[0], nums[1])
     // iterate from the 3rd element onwards 
     for(let i = 2; i < nums.length; i++) {
         dp[i] = Math.max(dp[i-1], nums[i] + dp[i-2]) 
