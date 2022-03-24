@@ -55,3 +55,38 @@ function inOrder(node, array) {
   }
   return array; 
 }
+
+/* Kth largest number in BST 
+
+Approach: 
+1. function kthLargest(root, k) 
+- edge case: if no root return 0
+- instantiate array as inOrder(root, [])
+- return array[array.length-k] (THINK FROM END)
+
+2. helper function inOrder(node, array) 
+- check: if node !== null we want to do something 
+- call inOrder(node.left, array)
+- array.push(node.val)
+- call inOrder(node.right, array)
+- return array 
+
+*/ 
+
+function kthLargest(root, k) {
+  if(root === null) return 0
+  let array = inOrder(root, [])
+  return array[array.length-k] 
+}
+
+function inOrder(node, array) {
+  if(node !== null) {
+    // left
+    inOrder(node.left, array) 
+    // self val
+    array.push(node.val)
+    // right
+    inOrder(node.right, array)
+  }
+  return array; 
+}
