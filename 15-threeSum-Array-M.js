@@ -96,19 +96,17 @@ function threeSum(nums) {
                 left++ 
             } else {
                 // threesum === 0! 
-                triplets.push([nums[i], nums[left], nums[right]]) 
-                // increase left pointer to keep it looping! 
-                left++ 
-                // keep looping only the left 
-                while(nums[left] === nums[left - 1] && left < right) {
-                    left++ 
-                }
+                triplets.push([nums[i], nums[left], nums[right]])
+                while(nums[right] === nums[right - 1]) right--
+                while(nums[left] === nums[left + 1]) left++
+                left++
+                right--
             }
         }
     }
     return triplets; 
 }
 
-console.log(threeSum([-3, 3, 4, -3, 1, 2]))
+console.log(threeSum([-3, 3, 4, -3, 1, 2])) 
 console.log(threeSum([-1, 0, 1, 2, -1, -4]))
 console.log(threeSum([-2, 0, 0, 2, 2]))
