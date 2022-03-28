@@ -21,12 +21,8 @@ Notes:
 - otherwise we discard sorted half array and keep examining unsorted half 
 - main key is VALUE of MID can be in sorted order, while right side is NOT sorted 
 
-Approach: 
-- initialize left at 0 
-- initialize right at end of "nums" array 
-- keep looping while left <= right pointer 
-- initialize mid as the average between left/right pointers 
-- 
+Time: O(log n) as we perform binary search
+Space: O(1) 
 
 */ 
 
