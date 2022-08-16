@@ -1,20 +1,26 @@
-/* Leetcode #242: Valid Anagram
+/* Valid Anagram (Leetcode #242) 
 
-Problem: Given 2 strings (str1, str2) return true if str2 is anagram of str1. 
-Return false if NOT anagram. 
+Problem: Given 2 strings "str1" "str2", return true if T is anagram of S. 
+Return false if otherwise 
 
-str1 = 'anagram' str2 = 'nagaram' 
-output = true 
+str1 = 'anagram' 
+a: 3
+n: 1
+g: 1
+r: 1
+m: 1
 
-str1 = 'rat' str2 = 'car' 
-output = false 
+str2 = 'nagaram'
+a: 3
+n: 1
+g: 1
+r: 1
+m: 1
 
-Scratchpad: 
-str1 a   n   a   g   r   a   m  => Map {a : 3, n : 1, g : 1, r: 1, m : 1}
-str2 n   a   g   a   r   a   m  => Map {n : 1, a : 3, g : 1, r: 1, m: 1}
-
-Time: O(n) 
-Space: O(n) 
+Approach 
+- prepare a frequency counter and get a map of each one 
+- then check if length of these two match
+- check if all letters are equal 
 
 Notes: implement frequency counter for str1/str2
 - main check: if str1 and str2 don't have same length we should return false 
@@ -25,31 +31,47 @@ Notes: implement frequency counter for str1/str2
 - else return true as we found they're valid anagram
 
 FrequencyCounter function (str) 
-- initialize JS MAP() as it has constant add/has/delete
+- initialize frequencies as a new Map() 
 - iterate each letter of the str
-- variable that holds letterCount 
-- check: if map contains str1[i] return true; then delete it from map 
-- else: add the letter to the map 
+- check: if hashmap doesn't have current letter? 
+- set current letter to hashmap and include 1 as count 
+- else: set current letter to hashmap again and increase its count by 1
+- return hashmap
+
+- Time: O(n) per n elements of each string
+- Space: O(n) per using a hashmap as frequencyCounter
 
 */ 
 
+// Helper function to build a frequency counter 
 function frequencyCounter(str) {
-    const frequencies = new Map() 
-    for(let letter of str) {
-        let letterCount = frequencies.get(letter) || 0
-        frequencies.set(letter, letterCount + 1)
+    if(str.length === 0) return null; 
+    const hashmap = new Map(); 
+    for(let i = 0; i < str.length; i++) {
+        if(!hashmap.has(str[i])) {
+            hashmap.set(str[i], 1); 
+        } else {
+            hashmap.set(str[i], hashmap.get(str[i]) + 1); 
+        }
     }
-    return frequencies 
+    return hashmap; 
 }
 
-function isAnagram(str1, str2) {
-    if(str1.length !== str2.length) return false 
-    const str1Freq = frequencyCounter(str1)
-    const str2Freq = frequencyCounter(str2)
-    for(let key of str1Freq.keys()) {
-        if(str2Freq.get(key) !== str1Freq.get(key)) {
-            return false 
+function isAnagram(s, t) {
+    // edge case: if length of these 2 strings is not equal there's no point in making a frequencyCounter 
+    if(s.length !== t.length) return false; 
+    let frequencyStr1 = frequencyCounter(s); 
+    let frequencyStr2 = frequencyCounter(t); 
+    // iterate over one of the frequencies
+    for(let key of frequencyStr1.keys()) {
+        if(frequencyStr1.get(key) !== frequencyStr2.get(key)) {
+            return false; 
         }
     }
     return true; 
 }
+
+// console.log(frequencyCounter("anagram")); // Map { a: 3 }, { n: 1 }, { g: 1 }, { r: 1 }, { m: 1 }
+// console.log(frequencyCounter("nagaram")); // Map { n: 1 }, { a: 3 }, { g: 1 }, { r: 1 }, { m: 1 }
+// console.log(isAnagram("anagram", "nagaram")); 
+// console.log(isAnagram("car", "rat")); 

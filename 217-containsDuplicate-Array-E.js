@@ -1,50 +1,47 @@
-/* Leetcode #217: Contains Duplicate
+/* Contains Duplicate (Leetcode #217)
 
-Problem: Given an array "nums" return true if any value appears at least twice in array.
+Problem: Given an array "nums" return TRUE if any value appeares at least TWICE in array. 
 Return false if every element is distinct 
 
 nums = [1, 2, 3, 1] 
-output = true; 1 appears at least twice  
+output = true; 1 appears twice on input array 
 
-nums = [1, 2, 3, 4]
-output = false; all distinct 
+nums = [1, 2, 3, 4] 
+output = false; all elements are distinct 
 
-nums = [1, 1, 1, 3, 3, 4, 3, 4, 2, 4, 2] 
-output = true; 1, 3, 4, 2 appear at least twice
+nums = [1, 1, 1, 3, 3, 4, 3, 2, 4, 2] 
+output = true; 1, 3, 2, 4 are repeating
 
-Scratchpad: 
-idx 0   1   2   3
-str 1   2   3   1
-    i               => 1 is not present so we'll add to the Set 
-        i           => 2 is not present in the Set; so add it 
-            i       => 3 is not present in the Set; so add it 
-                i   => 1 is in the Set (means it's a duplicate) 
+idx     0   1   2   3
+num     1   2   3   1   
+        i               => i === 1; hashset.add(1) 
+            i           => i === 2; hashset.add(2) 
+                i       => i === 3; hashset.add(3) 
+                    i   => i === 1; hashset.has(1) -> return true 
 
-Time: O(n) where n is # of elements in nums array 
-Space: O(1) 
+Brute Force 
+- initialize a hashset as new Set() -> helpful to detect duplicates
+- iterate over input array once (i at 0 until end) 
+- check: if hashset.has(num[i]) we return true
+- else we will add num[i] to hashset 
+- return false after looping everything 
 
-Notes: 
-- initialize a new Set() -> helpful to detect duplicates 
-- iterate over the strings 
-- check: if Set has str[i] return true 
-- else: add it to the Set 
-- return false... 
+Time: O(n) as we iterate input array once 
+Space: O(n) as we use a hashset 
 
-*/
+*/ 
 
 function containsDuplicate(nums) {
-    // edge case: if array is empty we just return false 
-    if(nums.length === 0) return false 
-    const set = new Set() 
+    const hashset = new Set(); 
     for(let i = 0; i < nums.length; i++) {
-        if(set.has(nums[i])) {
-            return true 
+        if(hashset.has(nums[i])) {
+            return true; 
         } else {
-            set.add(nums[i]) 
-        }
-    }
+            hashset.add(nums[i]); 
+        };
+    }; 
     return false; 
-}
+}; 
 
-console.log(containsDuplicate([1, 2, 3, 1]))
-console.log(containsDuplicate([1, 1, 1, 3, 3, 4, 3, 4, 2, 4, 2])) 
+console.log(containsDuplicate([1, 2, 3, 4, 5])); // false 
+console.log(containsDuplicate([1, 2, 3, 3, 1, 2])); // true
