@@ -45,3 +45,40 @@ function maxSubArray(nums) {
 }
 
 console.log(maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4]))
+
+/* Alternative Approach -> Time: O(n) | Space: O(1) 
+
+idx     0   1   2   3   4
+num     5   4   -1  7   8
+       c/m                  => currentSum, maxSum = 5
+            i               => currentSum = Math.max(4, 5 + 4) = 9, maxSum = 9
+                i           => currentSum = Math.max(-1, 9 - 1) = 8, maxSum = 9 
+                    i       => currentSum = Math.max(7, 8 + 7) = 15, maxSum = 15
+                        i   => currentSum = Math.max(8, 15 + 8) = 23, maxSum = 23
+
+Approach 
+- initialize currentSum at beginning of array 
+- initialize maxSum at beginning of array 
+- iterate over input array once (i at 1 until end) 
+- set currentSum as MAX between current element and currentSum + currentElement
+- check: if currentSum > maxSum ? we will set maxSum to currentSum 
+
+Time: O(n) where n is # of elements in array 
+Space: O(1) we don't incur extra memory
+
+*/ 
+
+function maxSubArray(nums) {
+    let currentSum = nums[0]; 
+    let maxSum = nums[0]; 
+    for(let i = 1; i < nums.length; i++) {
+        currentSum = Math.max(nums[i], currentSum + nums[i]); 
+        if(currentSum > maxSum) {
+            maxSum = currentSum; 
+        }
+    }
+    return maxSum; 
+}
+
+console.log(maxSubArray([-1, 2, 3, -5, 4])); // 5
+console.log(maxSubArray([5, 4, -1, 7, 8])); // 23
