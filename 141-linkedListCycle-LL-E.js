@@ -1,48 +1,62 @@
-/* Leetcode #141: Linked List Cycle 
+/* Linked List Cycle (Leetcode #141)
 
-Problem: Given the "head" of a linked list determine if the linked list has a "cycle" in it. 
-There is a cycle if there's some node in the list that can be reached again by following the "next" pointer. 
-Internally "pos" is used to denote the index of the node that tail's "next" pointer is connected to. 
-Return true if there's a cycle in the linked list. Else return false. 
+Problem: Given the "head" of a linked list, determine if this list has a cycle. 
+A cycle is when there's a node in the linked list that can be reached again by continuously following the "next" pointer. 
+Return true if there's a cycle; else return false. 
 
 head = [3, 2, 0, -4] pos = 1
-output = true; there's a cycle where the tail connects to the 1st node (0-index)
+output = true, cycle present in position 1 where the tail connects to the 1st node (0-indexed)
 
-head = [1, 2] pos = 0
-output = true; there's a cycle where the tail connects to the 0th node 
+head = [1, 2] pos = 0 
+output = true, cycle present in position 0, where tail connects to 0th node
 
-head = [1] pos = -1 
-output = false; there's no cycle 
+idx     0       1       2       3
+        3   ->  2   ->  0   ->  4    GOES BACK TO 2 -> 0 -> 4
+       s/f                           => initialize slow/fast pointers 
+ 
+1st iteration  
+        3   ->  2   ->  0   ->  4
+                s       f            => slow moves to slow.next; fast moves to fast.next.next
+ 
+2nd iteration  
+        3   ->  2   ->  0   ->  4
+                f       s           => slow at idx2; fast at idx1 
 
-Scratchpad: 
-3   ->  2   ->  0   ->  -4      (idx 1: goes back to 2)
-s       s       s       s   => slow/fast pointers meet at -4
----------------------------
-f               f         
-        f               f
+3rd iteration  
+        3   ->  2   ->  0   ->  4                                
+                                s/f => slow at idx 3; fast at idx3 they met! 
 
-Time: O(n) 
-Space: O(n) 
 
-Notes: 
-- when there's a cycle we think about fast/slow pointers. By moving at different speeds the 2 pointers are bound to meet. 
-- initialize slow and fast pointers starting at the head 
-- keep looping while we have fast & fast.next !== null 
-- advance slow pointer by 1 (next) 
-- advance fast pointer by 2 places (next.next) 
-- check: if slow meets fast we have a cycle
-- return false at the end... 
+Notes
+- to detect cycles we can use 2 pointers that run at different times
+- slow pointer moves 1 node to the next (next only) 
+- fast pointer moves 2 nodes to the next (next.next)
+- iterate through the array once while visiting all the nodes
+- if slow meets fast pointer then there's a cycle 
 
+Approach
+- initialize slow pointer at head
+- initialize fast pointer at head 
+- keep looping while fast && fast.next are NOT NULL since reaching the end means there's no cycle
+- slow pointer moves by 1 place (next) 
+- fast pointer moves by 2 places (next.next)
+- check: if slow meets fast ? we return true 
+- return false 
+
+Time: O(n) for looping through the array once
+Space: O(1) we don't incur extra memory
+    
 */ 
 
 function hasCycle(head) {
-    let slow = head 
-    let fast = head 
+    let slow = head; 
+    let fast = head; 
     while(fast && fast.next) {
-        slow = slow.next 
-        fast = fast.next.next 
+        slow = slow.next; 
+        fast = fast.next.next; 
+
         if(slow === fast) {
-            return true 
+            return true; 
         }
     }
     return false; 
