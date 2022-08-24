@@ -5,38 +5,51 @@ Problem: Given a BST "root", find lowest common ancestor of 2 given nodes "P", "
 root = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5] p = 2 q = 8 
 output = 6; LCA of nodes 2 and 8 is 6 
 
+                   6                => 6 is LCA
+                /     \  
+         (p)   2       8    (q) 
+             /  \     /  \
+            0    4    7  9
+               /  \
+              3    5
+
+                   6    
+                /     \  
+               2       8    
+             /  \     /  \
+            0    4    7  9
+               /  \
+          (p) 3    5 (q)  => 4 is LCA
+
 root = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5] p = 2 q = 4
 output = 2; LCA of nodes 2 and 4 is 2
 
 root = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5] p = 7 q = 9
 output = 8; LCA of nodes 7 and 9 is 8
 
-Approach -> Time: O(log n) because of height of tree
-         -> Space: O(1) we don't need any data structures 
-- if our search nodes are greater than root we should look at right subtree
-- if our search nodes are less than root we should look at left subtree 
-- if one of search node is greater than root, and one of search node is less than root we know LCA should be the root
+Notes
+- recursive approach 
+- start at root and we notice p & q are less than root node; so by binary search we know it'll be in left subtree 
+- if both p.val & q.val < root node we'll traverse to the left subtree 
+- if both p.val & q.val > root node we'll traverse to the right subtree 
+- return the lowest common ancestor
 
-Pseudocode: 
-- initialize current as the root 
-- keep looping while current is NOT null 
-- case 1: if values of p & q are greater than current ? we look at right subtree 
-- case 2: if values of p & q are less than current ? we look at left subtree 
-- case 3: if we find one of the values of p & q we just return current itself
+Time: O(n) where n is # of nodes we visit 
+Space: O(n) recursive call stack 
 
 */ 
 
 function lowestCommonAncestor(root, p, q) {
-    // edge case: if no root we can't return anything 
-    if(!root) return null 
-    let current = root 
-    while(current !== null) {
-        if(p.val > current.val && q.val > current.val) {
-            current = current.right 
-        } else if(p.val < current.val && q.val < current.val) {
-            current = current.left 
-        } else {
-            return current; 
-        }
+    // base case: if root is null we return null; 
+    if(root === null) return null;
+    // check: if value of p is < value of root && value of q is < value of root ? we know we have to check left subtree recursively 
+    if(p.val < root.val && q.val < root.val) {
+        // recurse to left subtree 
+        return lowestCommonAncestor(root.left, p, q); 
+    // check: if value of p is > value of root && value of q is > value of root ? we know we have to check right subtree recursively
+    } else if(p.val > root.val && q.val > root.val) {
+        return lowestCommonAncestor(root.right, p, q); 
+    } else {
+        return root; 
     }
 }
