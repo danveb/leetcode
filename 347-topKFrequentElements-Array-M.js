@@ -1,63 +1,88 @@
 /* Top K Frequent Elements (Leetcode #347) 
 
-Problem: Given array "nums" and "K", return top "K" most frequent elements. 
+Problem: Given an array "nums" and integer "k", return the "K" most frequent elements. 
+Constraint: perform better than O(n log n)
 
 nums = [1, 1, 1, 2, 2, 3] k = 2
-output = [1, 2]; 1 appears 3 times, 2 appears 2 times 
+output = [1, 2]
 
-Approach: 
-- use a hashmap to count frequency of elements that appears on array 
-- as we iterate each element we'll check hashmap and "SET" key/value pairs (# is key / frequency is value) 
-- we can sort frequencies to get top "K" most frequent elements 
+nums = [1] k = 1
+output = [1]
 
-Pseudocode: 
-1. implement hashmap that counts frequencies 
-- edge case? if array is empty we'll return [] 
-- initialize output as empty array 
-- initialize hashmap as new Map() 
-- iterate over "nums" array once (i at 0 until end) 
-- check: if hashmap has current element, we'll increase its frequency (VALUE) by 1
-- else: if hashmap does not have current element we should set to hashmap with frequency of 1
+idx     0   1   2   3   4   5
+num     1   1   1   2   2   3
+        i                       => Map { 1: 1 }
+            i                   => Map { 1: 2 }
+                i               => Map { 1: 3 }
+                    i           => Map { 1: 3, 2: 1 }
+                        i       => Map { 1: 3, 2: 2 }
+                            i   => Map { 1: 3, 2: 2, 3: 1 }
 
-2. sort frequencies and push to array 
-- initialize frequencies and spread hashmap (key/values) to array 
-- sort in descending order 
+sort the map in descending order because we want TOP "K" 
+Map { 1:3, 2:2, 3:1 } -> [1,3] 1 appears 3 times
+                      -> [2,2] 2 appears 2 times
+                      -> [3,1] 3 appears 1 time
 
-3. iterate over frequencies to find top "K" 
-- for loop (i at 0 until K) 
-- push result[i][0] to output 
-- return output 
+Recap
+- array of integers "nums" and integer "K", where "K" represents the most frequent elements 
+- task: iterate over the array and find "K" most frequent elements and return them 
 
-*/
+Notes
+- with use of hashmap we want to iterate over input array and check frequency of the elements 
+- convert the hashmap to array with ...spread
+- sort in descending order (a,b) => b[1] - a[1] 
+- iterate over K and push the frequency[i][0] to output []
+
+1. frequencyCounter(array)
+- initialize a hashmap as new Map() 
+- iterate over input array once (i at 0 until end)
+- check: if hashmap DOESN'T have current element at i ?
+-- we'll set current element with occurrence of 1
+- else: hashmap HAS current element at i 
+-- we'll set current element and increase its occurrence by +1 
+- return the hashmap 
+
+2. topKFrequent(nums, k) 
+- initialize output []
+- instantiate frequencyMap of frequencyCounter(nums)
+- spread frequencyMap into array 
+- manually sort in descending order -> b[1] - a[1] so we have "K" higher 
+- iterate from 0 until K and push frequencies[i][0] to []
+- return output [] 
+
+Time: O(n log n) where we manually sort the frequencies in descending order 
+Space: O(n) we use a hashmap 
+
+*/ 
 
 function topKFrequent(nums, k) {
-    if(nums.length === 0) return [] 
-    const output = [] 
-    const hashmap = new Map() 
-    for(let i = 0; i < nums.length; i++) {
-        if(hashmap.has(nums[i])) {
-            // use HASHMAP.GET(KEY) + 1 to increase frequency! 
-            hashmap.set(nums[i], hashmap.get(nums[i]) + 1)
-        } else {
-            hashmap.set(nums[i], 1) 
-        }
-    }
-
-    // sort frequencies 
-    const frequencies = [...hashmap] // [[1,3], [2,2], [3,1]] 
-    frequencies.sort((o1, o2) => {
-        if(o1[1] === o2[1]) {
-            return o2[0] - o1[0]
-        } else {
-            return o2[1] - o1[1] 
-        }
-    })
-
-    // get top "K" from frequencies 
+    // initialize output [] 
+    const output = []; 
+    // instantiate frequencyCounter of nums 
+    let frequencyMap = frequencyCounter(nums); 
+    const frequencies = [...frequencyMap]; // [[1,3], [2,2]]
+    // sort the frequencies because we want to know top "K" occurrences
+    // make sure to sort b[1] because we want [1] to appear higher
+    frequencies.sort((a, b) => b[1] - a[1]); 
     for(let i = 0; i < k; i++) {
-        output.push(frequencies[i][0])
+        output.push(frequencies[i][0]); 
     }
     return output; 
 }
 
-console.log(topKFrequent([1,1,1,2,2,3], 2)) // [1, 2]
+// frequencyCounter 
+function frequencyCounter(array) {
+    const hashmap = new Map();
+    for(let i = 0; i < array.length; i++) {
+        // check: if hashmap HAS current element at i?
+        if(hashmap.has(array[i])) {
+            // we'll increase its count by 1
+            hashmap.set(array[i], hashmap.get(array[i]) + 1)
+        // else: hashmap DOES NOT HAVE current element
+        } else {
+            // we'll set it to hashmap with count of 1
+            hashmap.set(array[i], 1)
+        }
+    }
+    return hashmap; 
+}
