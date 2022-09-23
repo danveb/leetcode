@@ -1,14 +1,10 @@
-/* Leetcode #206: Reverse A Linked List 
+/* Reverse a Linked List (Leetcode #206)
 
-Problem: Given the "head" of a linked list reverse it, and return the reversed list. 
+Problem: Given "head" of linked list, reverse the list and return it. 
 
-head = [1, 2, 3, 4, 5] 
-output = [5, 4, 3, 2, 1] 
+head = [1,2,3,4,5]
+output = [5,4,3,2,1]
 
-head = [1, 2] 
-output = [2, 1] 
-
-Scratchpad: 
         1 -> 2 -> 3 -> 4 -> 5 -> null 
 
 null -> a -> b -> c -> d -> null 
@@ -21,38 +17,48 @@ p       c    n
         p    c    n 
             p    c    n
                     p    c     n
-                        p     c (NULL) 
+                        p     c (NULL)
 
-Time: O(n) 
-Space: O(n) 
+Approach
+- we want to reverse the linked list so that 1-2-3-4-5 is 5-4-3-2-1
+- initialize "prev" var as null, which will act as the tail 
+- keep looping while head !== null 
+- old school loop
+-- initialize temp as head.next
+-- head.next = prev
+-- prev = head
+-- head = temp 
+- return prev; 
 
-Notes: 
-- initialize 2 pointers: current as head and prev as null 
-- keep looping while current is present 
-- initialize temp as current.next 
-- set current.next to prev 
-- set prev to current 
-- set current to be next 
-- return prev (as head of linked list) 
+Time: O(n) where n is length of linked list
+Space: O(1) we don't incur extra memory
+
+=== 
+
+class ListNode {
+	constructor(value) {
+		this.value = value; 
+		this.next = null; 
+	}
+}
 
 */ 
 
 function reverseList(head) {
-    // initialize current var to be the head 
-    let current = head 
-    // initialize prev var as null (we'll use it when reversing the linked list) 
-    let prev = null 
-    // keep looping while current is present 
-    while(current !== null) {
-        // initialize temp and save its reference 
-        let temp = current.next 
-        // have current.next point towards prev (null) 
-        current.next = prev 
-        // move prev to current place 
-        prev = current 
-        // move current to temp
-        current = temp
-    }
-    // return the new head of linked list at prev 
-    return prev; 
+	// edge case: if no linked list we return null 
+	if(head === null) return null; 
+	let prev = null; 
+	while(head !== null) {
+		// old school swap 
+		// initialize temp holding head.next
+		// head.next points backwards (to prev)
+		// prev points to head 
+		// head back to temp
+		let temp = head.next; 
+		head.next = prev; 
+		prev = head; 
+		head = temp; 
+	}
+	// return prev which made it to end of linked list
+	return prev; 
 }
