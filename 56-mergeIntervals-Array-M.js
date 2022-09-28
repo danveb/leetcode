@@ -1,15 +1,24 @@
 /* Merge Intervals (Leetcode #56) 
 
-Problem: Given an array of interval pairs, merge them and return an output array 
+Problem: Given array "intervals", where intervals[i] === [start, end], merge all overlapping intervals and return an array of non-overlapping intervals. 
 
-intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]                              
+intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]
+output = [[1, 6], [8, 10], [15, 18]] 
 
-    *****                                                   => [1,3] initial interval is pushed to result array [[1, 3]]
-      *********                                             => [2,6] overlaps at 2 and runs until 6
-                  *****                                     => [8,10] does not overlap so we push this interval to result array
-                                          *************     => [15,18] does not overlap so we push this interval to result array 
-<-+-+-+-+-+-+-+-+-+-+-+---+---+---+---+---+---+---+---+--->
-  0 1 2 3 4 5 6 7 8 9 10  11  12  13  14  15  16  17  18
+intervals = [[1, 4], [4, 5]]
+output = [[1, 5]] 
+
+0 1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
+--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--|    => start/end points 
+
+   X----X                                                    => [1,3] push current interval into result array
+   s1   e1                                                                         
+      X----------X                                           => [2,6] start2 (2) conflicts with end1 (3) so we want [1,6]
+      s2         e2                                         
+                        X----X                               => [8,10] no conflicts with next schedule
+                        s3   e3 
+                                             X-------X       => [15,18] no conflicts with next schedule 
+                                             s4      e4  
 
 [1, 3], [2, 6], [8, 10], [15, 18] 
     e1   s2 e2                     => is end1 >= start2? if so update e1 with e2 
@@ -20,38 +29,45 @@ intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]
 
 result = [[1, 6], [8, 10], [15, 18]] 
 
-Approach -> Time: O(n log n) for initial sort in case our input is NOT sorted; we just assume it's sorted for now
-- "sort" the intervals by "start" value? intervals.sort((a, b) => a[0] - b[0])
-- initialize result array 
-- push the first interval to result array
-- for let interval of Intervals 
-- initialize e1 as result[result.length-1][1]
-- initialize s2 as interval[0] 
-- initialize e2 as interval[1] 
-- if e1 >= s2 ? update e1: result[result.length-1][1] = Math.max(e1, e2) 
-- else result.push(interval)
-- return result array 
+Notes
+- manually sort the array because the intervals may not be in correct place -> O(n log n) 
+- initialize results array []
+- push the first interval into results array since it doesn't conflict with any schedule
+- iterate over input array (for OF LOOP) 
+- initialize end1 pointer as result[result.length-1][1]
+- initialize start2 pointer as interval[0] 
+- initialize end2 pointer as interval[1] 
+- check: if end1 >= start2 we will set end1 as MAX between end1 and end2
+- else we push interval into result array
+- return result array
 
-*/ 
+Time: O(n) where n is # of elements in input array 
+Space: O(1) we don't incur extra memory despite result [] 
+Notes: Most likely input array will be sorted already, but in case we need to manually
+sort we'll increase Time complexity to O(n log n)
+
+*/
 
 function merge(intervals) {
-    // do we need to sort? 
-    intervals.sort((a, b) => a[0] - b[0]) 
-    const result = [] 
-    result.push(intervals[0]) 
+    // manual sort if needed
+    intervals.sort((a, b) => a[0] - b[0]); 
+    const result = []; 
+    // push first interval into result array since it's already sorted
+    result.push(intervals[0]); 
 
+    // iterate over array of intervals 
     for(let interval of intervals) {
-        let end1 = result[result.length-1][1] 
-        let start2 = interval[0]
-        let end2 = interval[1]
-
+        // initialize end1, start2, end2 pointers
+        let end1 = result[result.length - 1][1]; 
+        let start2 = interval[0]; 
+        let end2 = interval[1]; 
+        // check if end1 >= start2
         if(end1 >= start2) {
-            result[result.length-1][1] = Math.max(end1, end2) 
+            // get the maximum between end1 and end2 pointers and eventually end2 will be bigger
+            result[result.length-1][1] = Math.max(end1, end2); 
         } else {
-            result.push(interval) 
+            result.push(interval); 
         }
     }
     return result; 
 }
-
-console.log(merge([[1, 3],[2, 6],[8, 10],[15,18]]))

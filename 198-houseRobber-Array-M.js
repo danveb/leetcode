@@ -1,6 +1,7 @@
 /* House Robber (Leetcode #198) 
 
-Problem: Given an array "nums" representing money of each house, return max amount of money we can rob without robbing 2 adjacent houses. 
+Problem: Given array "nums" representing amount of moneey at each house, return the max amount we can rob. 
+Note adjacent houses have automatic alarms so it's possible the house we try to rob may trigger the alarm. 
 
 nums = [1, 2, 3, 1] 
 output = 4; we rob house 1 (money = 1) and rob house 3 (money = 3). 3 + 1 = 4
@@ -36,17 +37,19 @@ Approach DYNAMIC PROGRAMMING -> Time: O(n) / Space: O(1)
 */ 
 
 function rob(nums) {
-    if(nums.length === 0) return 0
-    if(nums.length < 2) return Math.max(nums) 
+    if(nums.length === 0) return 0;
+    if(nums.length === 1) return nums[0];
 
     // initialize dp array filled with 0's 
     const dp = Array(nums.length).fill(0) 
+    // base case for 1st house
     dp[0] = nums[0] 
+    // base case for 2nd house (maximum between 1st and 2nd house because we can't have adjacent houses)
     dp[1] = Math.max(nums[0], nums[1])
-    // iterate from the 3rd element onwards 
+    // iterate from the 3rd house onwards
     for(let i = 2; i < nums.length; i++) {
-        dp[i] = Math.max(dp[i-1], nums[i] + dp[i-2]) 
+        dp[i] = Math.max(dp[i-1], dp[i-2] + nums[i]) 
     }
-    // return the last value which is the highest of dp
+    // return the last value of the array (highest of dp)
     return dp[dp.length - 1] 
 }
