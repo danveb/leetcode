@@ -1,77 +1,76 @@
 /* Two Sum (Leetcode #1) 
 
-- Given an array of integers "nums" and "target" 
-- return indices of two numbers so they add up to target 
-- exactly one solution 
-- return the answer in any order 
+Problem: Given an array of integers "nums" and "target" return the indices
+of two numbers that add up to target. Return pair in any order. 
 
 nums = [2, 7, 11, 15] target = 9
-output = [0 ,1] because 2 + 7 === 9 
+output = [0,1] because [2, 7] = 9
 
-nums = [3, 2, 4] target = 6 
-output = [1, 2] because 2 + 4 === 6 
+nums = [3, 2, 4] target = 6
+output = [1,2] because [2, 4] = 6
+
+nums = [3, 3] target = 6
+output = [0,1] because [3, 3] = 6
+
+idx 0   1   2   
+num 3   2   4
+    i   j       => 3 + 2 = 5; NOT TARGET 
+    i       j   => 3 + 4 = 7; NOT TARGET
+        i   j   => 2 + 4 = 6; meets target [1, 2] 
 
 Brute Force 
-- start looping the array once 
-- add another for loop to go through the array one more time 
-- check: if the first item + second item meet up to the target we can return its indices 
-- Time O(n^2): we loop through the array twice 
-- Space O(1) we don't need any additional data structures 
+- iterate over input array once (i at 0 until end) 
+- iterate over input array again (j at i + 1 until end)
+- check: if nums[i] + nums[j] === target ? 
+-- return its indices [i, j] 
 
-idx 0   1   2
-num 3   2   4
-    i   j       => i === 3; j === 2; sum = 5 
-    i       j   => i === 3; j === 4; sum = 7 
-        i   j   => i === 2; j === 4; sum = 6 meets target 
-
-Pseudocode 
-- initialize a for loop (starts from 0 until the end) 
-- initalize a 2nd for loop (starts at 1 until the end) 
-- check: if nums[i] + nums[j] === target we can return it 
-
-===
-
-Optimal 
-- initialize hashmap as new Map 
-- iterate over the array once 
-- initialize difference as target - nums[i] 
-- check: if hashmap.has(difference) we know we have found the other pair 
-- check: if hashmap doesn't have the difference we are going to add it to the hashmap and continue to loop 
-- Time O(n): we loop over the array once 
-- Space O(n) we use a hashmap (data structure) 
-
-idx 0   1   2 
-num 3   2   4
-    i           => i === 3; difference is 6 - 3; we'll just add 3 to hashmap 
-        i       => i === 2; difference is 6 - 2; we'll just add 2 to hashmap
-            i   => i === 4; difference is 6 - 4; hashmap has difference of 2; return it
-
-*/ 
-
-// function twoSum(nums, target) {
-//     for(let i = 0; i < nums.length; i++) {
-//         for(let j = i + 1; j < nums.length; j++) {
-//             if(nums[i] + nums[j] === target) {
-//                 return [i, j] 
-//             }
-//         }
-//     }
-// }
-
-// console.log(twoSum([3,2,4], 6)); 
-// console.log(twoSum([2,7,11,15], 9)); 
+Time: O(n^2) where we perform 2 nested for loops
+Space: O(n) we return an output array 
 
 function twoSum(nums, target) {
-    const hashmap = new Map(); 
+    // edge case: if nums array is empty we return [] 
+    if(nums.length === 0) return []; 
     for(let i = 0; i < nums.length; i++) {
-        let difference = target - nums[i] 
-        if(hashmap.has(difference)) {
-            return [hashmap.get(difference), i]; 
-        } else {
-            hashmap.set(nums[i], i); 
+        for(let j = i + 1; j < nums.length; j++) {
+            if(nums[i] + nums[j] === target) {
+                return [i, j]
+            }
         }
     }
 }
 
-console.log(twoSum([3,2,4], 6)); 
-console.log(twoSum([2,7,11,15], 9)); 
+===
+
+idx 0   1   2
+num 3   2   4
+    i           => difference = 6 - 3; hashmap { 3:0 }
+        i       => difference = 6 - 2; hashmap { 3:0, 2:1 }
+            i   => difference = 6 - 4; hashmap.has 2; return [1,2]
+
+Optimal
+- initialize hashmap as new Map() 
+- iterate over input array once (i at 0 until end)
+- initialize difference as target - nums[i]
+- check: if hashmap DOES NOT HAVE difference? 
+-- we'll set current element and its index 
+- else: hashmap HAS difference
+-- we'll return [hashmap.get(difference), i]
+
+Time: O(n) where n is # of elements in input array
+Space: O(n) we use a hashmap (data structure) 
+
+*/ 
+
+function twoSum(nums, target) {
+    // edge case: if nums array is empty we return []
+    if(nums.length === 0) return []; 
+    const hashmap = new Map();
+    for(let i = 0; i < nums.length; i++) {
+        let difference = target - nums[i]; 
+        if(!hashmap.has(difference)) {
+            hashmap.set(nums[i], i); 
+        } else {
+            return [hashmap.get(difference), i]; 
+        }
+    }
+}
