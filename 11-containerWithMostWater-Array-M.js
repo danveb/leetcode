@@ -1,64 +1,58 @@
-/* Container with Most Water (Leetcode #11) 
+/* Container With Most Water (Leetcode #11) 
 
-Problem: Given an array "height" of length "n", find two lines that finds the container with most water. 
-Return max amount of water the container can store. 
+Problem: Given an array "height" of length "n", find two lines that together form a container, such that the container contains the most water. 
+Return the max amount of water a container can store. 
 
 height = [1, 8, 6, 2, 5, 4, 8, 3, 7] 
-output = 49; 7 X 7 
+output = 49; max area is 7 * 7 
 
-Scratchpad: 
 idx     0   1   2   3   4   5   6   7   8
-num     1   8   6   2   5   4   8   3   7   => L/R because we want width as MAX as possible 
-        L                               R   => 1 vs. 7; area is 1 * 8 = 8
-            L                           R   => 8 vs. 7; area is 7 * 7 = 49
-            L                       R       => 8 vs. 3; area is 8 * 6 = 42
-            L                   R           => 8 vs. 8; area is 8 * 5 = 40; shift LEFT better 
-                L               R           => 6 vs. 8; area is 6 * 5 = 30
-                    L           R           => 2 vs. 8; area is 2 * 3 = 6
-                        L       R           => 5 vs. 8; area is 5 * 2 = 10
-                            L   R           => 4 vs. 8; area is 4 * 1 = 4
-                                L/R         => loop breaks (start < end) 
+num     1   8   6   2   5   4   8   3   7   => max at 0, width = R idx - L idx, length = min(R[idx], L[idx]), area = w * l, max = max(max, area)
+        L                               R   => width = 8-0 = 8, length = 1, area = w * l = 8, max = 8
+            L                           R   => width = 8-1 = 7, length = 7, area = w * l = 49, max = 49
+            L                       R       => width = 7-1 = 6, length = 3, area = w * l = 18, max = 49
+            L                   R           => width = 6-1 = 5, length = 8, area = w * l = 40, max = 49
 
-Time: O(n) per n number of elements 
-Space: O(1) as we don't need additional space 
-
-Notes:
-- area of a rectangle = length * width 
-- (j - i) is the distance between 2 index * min(height[i], height[j]) 
-- 2 pointer approach where start at 0 and end will be end of the array 
+Given: 
+- we have an array of size "n"
+- need to find maxArea, whcih is amount of water the container can store
+- area of rectangle = length * width OR (end - start) * min(height[end], height[start])
+- using 2 pointers we'll calculate from the ends and try to meet them in center so we can get the max amount
+- need to handle moving start or end pointer based on whichever the smaller value it is 
 
 Approach: 
-- initialize start at 0 
-- initialize end at end of array 
 - initialize max at 0 
-- keep looping while start < end 
-- initialize width as end - start 
-- initialize length as MINIMUM between height[start], height[end] 
-- initialize area as length * width 
-- to get the max, get maximum between max & area 
-- check: if height[start] < height[end] ? 
-- increase start++ 
-- else decrease end-- 
-- return max; 
+- initialize 2 pointers; left at 0; right at end of array 
+- keep iterating the input array (while left < right)
+- initialize width as right-left 
+- initialize length as MIN(L, R) 
+- initialize area as width * length
+- set max as MAX(max, area)
+- check: if height[left] < height[right] we'll move left++ 
+- else: move right-- 
+- return max
+
+Time: O(n) where n is # of elements 
+Space: O(1) we don't incur extra memory
 
 */ 
 
 function maxArea(height) {
-    let start = 0
-    let end = height.length - 1
-    let max = 0
-    while(start < end) {
-        let width = end - start 
-        let length = Math.min(height[start], height[end]) 
-        let area = length * width 
-        max = Math.max(max, area) 
+    let max = 0; 
+    let left = 0;
+    let right = height.length - 1; 
+    while(left < right) {
+        let width = right - left; 
+        let length = Math.min(height[left], height[right]); 
+        let area = width * length; 
+        // set max now 
+        max = Math.max(area, max); 
 
-        // move pointers if start < end
-        if(height[start] < height[end]) {
-            start++
+        if(height[left] < height[right]) {
+            left++; 
         } else {
-            end--
+            right--
         }
     }
     return max; 
-}
+}; 
