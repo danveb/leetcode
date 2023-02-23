@@ -5,6 +5,43 @@ Problem: Given a 1-indexed sorted array of integers "nums", find two numbers tha
 nums = [2, 7, 11, 15] target = 9
 output = [1, 2]
 
+Brute Force: 
+- perform a nested for loop where we iterate twice over input array
+
+Approach:
+- edge case: if numbers array is empty? return []
+- iterate over input array once 
+- iterate over input array again (j = i + 1)
+- initialize sum as nums[i] + nums[j] 
+- check: if sum === target? we can return [i, j]
+
+Time: O(n^2) where we perform a nested for loop
+Space: O(1) we don't incur extra memory 
+
+function twoSum(numbers, target) {
+    if(numbers.length === 0) return [];
+    for(let i = 0; i < numbers.length; i++) {
+        for(let j = i + 1; j < numbers.length; j++) {
+            let sum = numbers[i] + numbers[j]; 
+            // check 
+            if(sum === target) {
+                return [i + 1, j + 1]
+            }
+        }
+    }
+}
+
+===
+
+Optimal: 
+- use a 2 pointer approach where we add up L + R to check if === target
+- if sum < target? we'll increase left++
+- if sum > target? we'll decrease right--
+- if sum === target? we can return [L + 1, R + 1] 
+
+Time: O(n) where we iterate over input array ONCE 
+Space: O(1) we don't incur extra memory
+
 Scratchpad: 
 idx     0   1   2   3 
 num     2   7   11  15
