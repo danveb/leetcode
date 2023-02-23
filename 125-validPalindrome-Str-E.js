@@ -99,5 +99,34 @@ function isValidCharacter(character) {
     return validCharacters.indexOf(character.toLowerCase()) > -1
 }
 
+// ===
+
+function isPalindrome3(str) {
+    let cleanedStr = cleanStr(str); 
+    let left = 0;
+    let right = cleanedStr.length -1; 
+    while(left < right) {
+        if(cleanedStr.charAt(left) !== cleanedStr.charAt(right)) {
+            return false; 
+        };
+        left++;
+        right--; 
+    };
+    return true; 
+}
+
+function cleanStr(str) {
+    let newStr = ""; 
+    let chars = "abcdefghijklmnopqrstuvwxyz0123456789"; 
+    for(let i = 0; i < str.length; i++) {
+        let lowercaseStr = str.toLowerCase(); 
+        if(chars.indexOf(lowercaseStr) !== -1) {
+            newStr += chars; 
+        }
+    };
+    return newStr; 
+}
+
 console.log(isPalindrome2('A man, a plan, a canal: Panama'))
 console.log(isPalindrome2(''))
+console.log(isPalindrome3("A brown fox jumping over")); 
