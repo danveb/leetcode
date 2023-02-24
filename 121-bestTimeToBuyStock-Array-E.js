@@ -1,9 +1,8 @@
-/* Leetcode #121: Best Time To Buy Stock I 
+/* Best Time To Buy Stock I (Leetcode #121) 
 
-Problem: Given an array "prices" where prices[i] is the price of a given stock on the ith day. 
-Maximize profit by choosing a single day to buy one stock and choose a different day to sell that stock. 
-Return the maximum profit from this transaction. 
-If we can't achieve any profit return 0. 
+Problem: given an array "prices" where prices[i] is price of a given stock
+on ith day. we want to maximize profit by choosing single day to buy a stock
+and sell on any day in the future. Return max profit we can achieve. 
 
 prices = [7, 1, 5, 3, 6, 4] 
 output = 5; buy on day 2 (price = 1) and sell on day 5 (price = 6). Profit = 6-1 = 5 
@@ -11,44 +10,96 @@ output = 5; buy on day 2 (price = 1) and sell on day 5 (price = 6). Profit = 6-1
 prices = [7, 6, 4, 3, 1] 
 output = 0; no transactions are done and max profit = 0 
 
-Scratchpad: 
-day 1   2   3   4   5   6
-idx 0   1   2   3   4   5
-num 7   1   5   3   6   4
-    i                       => buying at 7 is too high... potentially we might find something lower later 
-        i                   => price is 1 on second day so ideally buy at lowest 
-            i               => price on day 3 is high but we can wait; potentially our profit would be 4 if we sell 
-                i           => price on day 4 is lower than previous day 
-                    i       => price on day 5 is the highest and we can sell; potentially profit would be 5 
-                        i   => price on day 6 is lower than day 5 
+idx     0   1   2   3   4   5
+num     7   1   5   3   6   4
+        i   j                   => 1 - 7 = -6; maxP = 0
+        i       j               => 5 - 7 = -2; maxP = 0
+        i           j           => 3 - 7 = -4; maxP = 0
+        i               j       => 6 - 7 = -1; maxP = 0
+        i                   j   => 4 - 7 = -3; maxP = 0
+            i   j               => 5 - 1 = 4; maxP = 4
+            i       j           => 3 - 1 = 2; maxP = 4
+            i           j       => 6 - 1 = 5; maxP = 5
+            i               j   => 4 - 1 = 3; maxP = 5
+                i   j           => 3 - 5 = -2; maxP = 5
+                i       j       => 6 - 5 = 1; maxP = 5
+                i           j   => 4 - 5 = -1; maxP = 5
+                    i   j       => 6 - 3 = 3; maxP = 5
+                    i       j   => 4 - 3 = 1; maxP = 5
+                        i   j   => 4 - 6 = -2; maxP = 5
 
-Time: O(n) per n elements of prices array 
-Space: O(n) 
+1. Brute Force
+- perform a nested for loop (i / j) where we calculate i - j
+- we keep track of currentProfit at 0 and update as we calculate
 
-Notes: 
-- buy low and sell high for max profit 
-- initialize minBuy as the first stock we buy from the array 
-- initialize maxP at 0 
-- iterate over prices array once (start from idx 1) 
-- initialize sellPrice at prices[i] 
-- initialize profit as the difference between sell/buy 
-- set maxProfit as the maximum between maxProfit and current profit 
-- set minBuy as the minimum between minBuy and current price 
+Algorithm
+- edge case: if prices array is empty we return maxProfit of 0
+- initialize currentP at 0
+- initialize maxP at 0
+- iterate over input array once (i at 0 until end)
+- iterate over input array again (j at i + 1 until end) 
+- set currentP to nums[j] - nums[i] 
+- set maxP as MAX between currentP and maxP
 - return maxP 
 
-*/
+Time: O(n^2) where we perform a nested for loop 
+Space: O(1) we don't incur extra memory 
 
 function maxProfit(prices) {
-    let minBuy = prices[0]  
-    let maxP = 0
-    for(let i = 1; i < prices.length; i++) {
-        let sellPrice = prices[i] 
-        let profit = sellPrice - minBuy 
-        maxP = Math.max(maxP, profit) 
-        minBuy = Math.min(minBuy, prices[i])
+    if(prices.length === 0) return 0; 
+    let currentP = 0;
+    let maxP = 0;
+    for(let i = 0; i < prices.length; i++) {
+        for(let j = i + 1; j < prices.length; j++) {
+            currentP = prices[j] - prices[i]; 
+            // maxP = Math.max(currentP, maxP)
+            // OR 
+            if(currentP > maxP) maxP = currentP; 
+        }
     }
     return maxP; 
 }
 
-console.log(maxProfit([7, 1, 5, 3, 6, 4]))
-console.log(maxProfit([3, 1, 9, 4, 5])) 
+===
+
+idx     0   1   2   3   4   5
+num     7   1   5   3   6   4
+        mB  i                   => currentP = 1 - 7 = -6; minB = MIN(1, 7) = 1; maxP = 0
+            mB  i               => currentP = 4; minB = 1; maxP = 4
+            mB      i           => currentP = 2; minB = 1; maxP = 4
+            mB          i       => currentP = 5; minB = 1; maxP = 5
+            mB              i   => currentP = 3; minB = 1; maxP = 5
+
+2. Optimal
+- set minBuy as first element of the array since we have to buy anyway
+- we want to iterate over input array from index 1 until end 
+
+Algorithm 
+- initialize minB to first element of array 
+- initialize currentP at 0
+- initialize maxP at 0
+- iterate over input array (i at 1 until end) 
+- set currentP = i - mB 
+- set maxP to MAX between currentP, maxP 
+- set minB to MIN between minB, nums[i] 
+- return maxP 
+
+Time: O(n) where "n" is the length of input array 
+Space: O(1) we don't incur extra memory
+
+*/ 
+
+function maxProfit(prices) {
+    if(prices.length === 0) return 0; 
+    let minB = prices[0];
+    let currentP = 0;
+    let maxP = 0; 
+    for(let i = 1; i < prices.length; i++) {
+        currentP = prices[i] - minB; 
+        // maxP = Math.max(currentP, maxP); 
+        if(currentP > maxP) maxP = currentP; 
+        // minB = Math.min(minB, prices[i]); 
+        if(prices[i] < minB) minB = prices[i]; 
+    };
+    return maxP; 
+}

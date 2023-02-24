@@ -18,23 +18,26 @@ num 3   2   4
     i       j   => 3 + 4 = 7; NOT TARGET
         i   j   => 2 + 4 = 6; meets target [1, 2] 
 
-Brute Force 
-- iterate over input array once (i at 0 until end) 
-- iterate over input array again (j at i + 1 until end)
-- check: if nums[i] + nums[j] === target ? 
--- return its indices [i, j] 
+1. Brute Force
+- use a nested for loop (i & j) to calculate nums[i] + nums[j]
 
-Time: O(n^2) where we perform 2 nested for loops
-Space: O(n) we return an output array 
+Algorithm
+- edge case: if nums array is empty we return [] 
+- iterate over input array once (i at 0 until end) 
+- iterate over input array again (j at i + 1 until end) 
+- initialize sum = nums[i] + nums[j] 
+- check: if sum === target? we can return its indices [i,j]
+
+Time: O(n^2) where we perform nested for loops 
+Space: O(1) we don't incur extra memory apart from output [] 
 
 function twoSum(nums, target) {
-    // edge case: if nums array is empty we return [] 
     if(nums.length === 0) return []; 
     for(let i = 0; i < nums.length; i++) {
         for(let j = i + 1; j < nums.length; j++) {
-            if(nums[i] + nums[j] === target) {
-                return [i, j]
-            }
+            let sum = nums[i] + nums[j]; 
+            // check with target
+            if(sum === target) return [i, j]; 
         }
     }
 }
@@ -47,14 +50,20 @@ num 3   2   4
         i       => difference = 6 - 2; hashmap { 3:0, 2:1 }
             i   => difference = 6 - 4; hashmap.has 2; return [1,2]
 
-Optimal
+2. Optimal 
+- use a hashmap to store indices of elements in array 
+- as we iterate through each element we calculate difference = target - nums[i] 
+- if hashmap doesn't have the difference we'll keep looping 
+- else we can just return indices 
+
+Algorithm
+- same edge case 
 - initialize hashmap as new Map() 
-- iterate over input array once (i at 0 until end)
-- initialize difference as target - nums[i]
+- iterate over input array once 
+- initialize difference = target - nums[i]
 - check: if hashmap DOES NOT HAVE difference? 
--- we'll set current element and its index 
-- else: hashmap HAS difference
--- we'll return [hashmap.get(difference), i]
+-- SET current element with its index to hashmap 
+- else: hashmap HAS difference so we'll return [hashmap.get(difference), i]
 
 Time: O(n) where n is # of elements in input array
 Space: O(n) we use a hashmap (data structure) 
@@ -62,7 +71,6 @@ Space: O(n) we use a hashmap (data structure)
 */ 
 
 function twoSum(nums, target) {
-    // edge case: if nums array is empty we return []
     if(nums.length === 0) return []; 
     const hashmap = new Map();
     for(let i = 0; i < nums.length; i++) {

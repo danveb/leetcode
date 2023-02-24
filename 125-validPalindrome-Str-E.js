@@ -1,6 +1,8 @@
-/* Leetcode #125: Valid Palindrome
+/* Valid Palindrome (Leetcode #125) 
 
 Problem: Given a string "str" return true if it's a palindrome or false otherwise. 
+A palindrome is a string where all uppercase letters are converted to lowercase, 
+all non-alphanumeric chars are removed and is read same forward/backward. 
 
 str = 'A man, a plan, a canal: Panama' 
 output = true; "amanaplanacanalpanama" is a palindrome 
@@ -23,110 +25,64 @@ str a   m   a   n   a   p   l   a   n   a   c   a   n   a   l   p   a   n   a   
                                         l       r                                       => a === a, move pointers inward 
                                            l/r                                          => c/c 
 
-Time: O(n) 
-Space: O(1) we don't need extra memory for data structures
+1. Brute Force / Optimal
+- perform 2 pointer approach where we run pointers from opposite ends
+- using a helper function to cleanStr where we turn all to lowercase and remove non-alphanumeric chars 
 
-Notes: use regex and 2 pointers that will move inwards
-- convert any uppercase to lowercase 
-- use regex to remove any colons, spaces 
-- initialize left at 0 
-- initialize right at end of str
-- keep looping while left is less than equal to right pointer 
-- check: if str[left] !== str[right] return false
-- separately increase/decrease pointers 
-- return true in the end
+Algorithm
+- edge case: if string is empty we can return false since it's NOT palindrome 
+- initialize cleanedStr var and call cleanStr function 
+- initialize left pointer at 0
+- initialize right pointer at end of cleanStr 
+- keep looping while left < right
+- check: if current char at left !== current char at right ? we return false rightaway 
+- keep left++ 
+- keep right-- 
+- return true... since it's a palindrome 
 
-Notes 2: without regex and still use 2 pointers 
-- ,:~ space are all invalid characters that need to be removedremoved 
+** helper function cleanStr(s)
+- initialize newStr as empty str
+- initialize chars as "abcdefghijklmnopqrstuvwxyz0123456789"
+- iterate over the string once (i at 0 until end) 
+- initialize lowercaseStr to convert each character into lowercase 
+- check: if chars.indexOf(lowercaseStr) !== -1 ? meaning we can find it! 
+- we'll build newStr += lowercaseStr 
+- return newStr 
 
-Approach 2 
-- initialize left at 0 
-- initialize right at end of str 
-- keep looping while left <= right 
-- check: if str[left] is NOT equal to str[right] return false 
-- keep moving pointers inward LEFT++/RIGHT-- 
-- after checking everything return true in the end
+Time: O(n) where "n" is length of input string + O(n) for checking for non-alphanumeric characters when building newStr
+Space: O(1) we don't incur extra memory
 
 */ 
 
-function isPalindrome(str) {
-    str = str.toLowerCase() 
-    str = str.replace(/[^A-Za-z0-9]/g, '')
-    let left = 0
-    let right = str.length - 1 
-    while(left <= right) {
-        if(str[left] !== str[right]) {
-            return false 
-        }
-        // move pointers inward 
-        left++
-        right-- 
-    }
-    return true; 
-}
-
-console.log(isPalindrome('A man, a plan, a canal: Panama'))
-console.log(isPalindrome('race a car'))
-
-function isPalindrome2(str) {
-    let left = 0
-    let right = str.length - 1
-    while(left < right) {
-        // checks whether LEFT pointer is on VALID CHARACTER (left++ to keep checking)
-        while(!isValidCharacter(str.charAt(left))) {
-            left++ 
-        } 
-
-        // checks whether RIGHT pointer is on VALID CHARACTER (right-- to keep checking)
-        while(!isValidCharacter(str.charAt(right))) {
-            right--
-        }
-
-        // check if LOWERCASE characters are NOT EQUAL to return false 
-        if(str.charAt(left).toLowerCase() !== str.charAt(right).toLowerCase()) return false
-
-        // move pointers inward 
-        left++
-        right--
-    }   
-    return true 
-}
-
-// helper function for isPalindrome2
-function isValidCharacter(character) {
-    // initialize validCharacters as alpha-numeric 
-    let validCharacters = 'abcdefghijklmnopqrstuvwxyz0123456789' 
-    return validCharacters.indexOf(character.toLowerCase()) > -1
-}
-
-// ===
-
-function isPalindrome3(str) {
-    let cleanedStr = cleanStr(str); 
+function isPalindrome(s) {
+    if(s.length === 0) return false; 
+    let cleanedStr = cleanStr(s); 
+    // initialize pointers left/right
     let left = 0;
-    let right = cleanedStr.length -1; 
+    let right = cleanedStr.length - 1; 
     while(left < right) {
-        if(cleanedStr.charAt(left) !== cleanedStr.charAt(right)) {
+        // check for !== 
+        if(cleanedStr[left] !== cleanedStr[right]) {
             return false; 
         };
-        left++;
-        right--; 
+        left++
+        right--
     };
     return true; 
 }
 
+// helper function 
 function cleanStr(str) {
     let newStr = ""; 
     let chars = "abcdefghijklmnopqrstuvwxyz0123456789"; 
     for(let i = 0; i < str.length; i++) {
-        let lowercaseStr = str.toLowerCase(); 
-        if(chars.indexOf(lowercaseStr) !== -1) {
-            newStr += chars; 
+        let lowerStr = str[i].toLowerCase(); 
+        if(chars.indexOf(lowerStr) !== -1) {
+            newStr += lowerStr; 
         }
     };
     return newStr; 
 }
 
-console.log(isPalindrome2('A man, a plan, a canal: Panama'))
-console.log(isPalindrome2(''))
-console.log(isPalindrome3("A brown fox jumping over")); 
+console.log(isPalindrome("A man, a plan, a canal: Panama")); // true
+console.log(isPalindrome("race a car")); // false
