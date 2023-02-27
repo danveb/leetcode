@@ -27,24 +27,39 @@ num     -1  0   1   2   -1  -4
             i   j   k           => 0 + 1 + 2 = 3
             i   j       k       => 0 + 1 - 1 = 0; DUPLICATE [0, 1, -1]
 
-Brute Force 
-- perform a 3 pointer approach (i/j/k) where we calculate elements of i+j+k
-- if current elements at i/j/k === 0 we output result to [] 
-- issue: we have duplicates... 
+1. Brute Force
+- have 3 pointers (i, j, k) to loop 3 times over input array
+- when then calculate nums[i] + nums[j] + nums[k] === 0
+- if sum === 0 we will push to an output array [] 
+- ISSUE: we are going to have repeated values pushed to output array 
 
-Notes
-- edge case: if array is empty we output [] 
+Algorithm
+- edge case: if nums array is empty we return empty [] 
 - initialize output [] 
-- iterate over input array once (i at 0 until end) 
+- iterate over input array once (i at 0 until end)
 - iterate over input array again (j at i + 1 until end)
 - iterate over input array again (k at j + 1 until end)
-- initialize sum = nums[i] + nums[j] + nums[k] 
-- check: if sum === 0? 
--- we'll push [nums[i], nums[j], nums[k]] to output array 
-- return output
+- initialize sum as nums[i] + nums[j] + nums[k] 
+- check: if sum === 0? we know it's a triplet so we'll push this into output array 
 
-Time: O(n^3) for nested loops; iterates 3 times over input array 
-Space: O(n) we use an output array to store triplet values 
+Time: O(n^3) for making 3 iterations on same input array 
+Space: O(1) as we don't incur extra memory for data structures
+
+function threeSum(nums) {
+    if(nums.length === 0) return [];
+    const output = [];
+    for(let i = 0; i < nums.length; i++) {
+        for(let j = i + 1; j < nums.length; j++) {
+            for(let k = j + 1; k < nums.length; k++) {
+                let sum = nums[i] + nums[j] + nums[k]; 
+                if(sum === 0) {
+                    output.push([nums[i], nums[j], nums[k]]); 
+                }
+            }
+        }
+    };
+    return output; 
+}
 
 ===
 
@@ -71,7 +86,7 @@ sort    -4  -1  -1  0   1   2
                 i       j   k   => -1 + 1 + 2 = 2
                     i   j   k   => 0 + 1 + 2 = 3
 
-Better than Brute Force? 
+2. Better than Brute Force? 
 - Sort array in ascending order and CHECK FOR DUPLICATES
 - perform a 3 pointer approach (i/j/k) 
 - iterate over input array once (i at 0 until end)
@@ -142,7 +157,7 @@ sort    -4  -1  -1  0   1   2
                 i   L       R   => i === -1 && equal to -1 before continue 
                     i   L   R   => 0 + 1 + 2 = 3
 
-Optimal
+3. Optimal
 - Sort array in ascending order and CHECK FOR DUPLICATES
 - iterate over input array once (i at 0 until end)
 --> if(i > 0 && nums[i] === nums[i - 1]) continue the loop 
@@ -172,6 +187,7 @@ function threeSum(nums) {
     if(nums.length === 0) return []; 
     const triplets = []; 
     for(let i = 0; i < nums.length; i++) {
+        // CHECK FOR DUPLICATE HERE: we compare current value to previous value 
         if(i > 0 && nums[i] === nums[i - 1]) continue;
         let left = i + 1; 
         let right = nums.length - 1; 
