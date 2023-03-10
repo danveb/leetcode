@@ -1,4 +1,4 @@
-/* Odd Even Linked List (Leetcode #238) 
+/* Odd Even Linked List (Leetcode #328) 
 
 Problem: Given "head" of a linked list, group all nodes with odd indices first, followed by even indices. 
 Return the reordered list. 
