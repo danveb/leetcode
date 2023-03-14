@@ -19,26 +19,42 @@ num     4   5   6   7   0   1   2
                         L   M   R   => nums[mid] NOT greater than nums[right] -> right = mid
                         LM  R       => just return nums[left]
 
+1. Brute Force #1 
+- use Math.min built-in method to return lowest element (...spread) 
 
-Time: O(log n) for binary search on sorted rotated array 
-Space: O(1) we don't incur additional memory
+2. Brute Force #2 
+- keep track of MIN element at Infinity 
+- as we iterate over input array check if current element at I < MIN? 
+- if so we set MIN to current element at I 
 
-Notes: BRUTE FORCE -> O(n) using linear search
-- using Math.min return the lowest element of the array (using SPREAD operator) 
+Time: O(n) where n is length of input array 
+Space: O(1) we don't incur additional memory 
 
-*/
+function findMinElement(nums) {
+    let minimum = Infinity 
+    for(let i = 0; i < array.length; i++) {
+        if(array[i] < minimum) {
+            minimum = array[i] 
+        }
+    }
+    return minimum; 
+}
 
-// function findMinRotatedLinear(array) {
-//     let minimum = Infinity 
-//     for(let i = 0; i < array.length; i++) {
-//         if(array[i] < minimum) {
-//             minimum = array[i] 
-//         }
-//     }
-//     return minimum; 
-// }
+OR 
 
-/* 
+function findMinIndex(nums) {
+    let idx = 0;
+    let min = Infinity;
+    for(let i = 0; i < nums.length; i++) {
+        if(nums[i] < min) {
+            min = nums[i]; 
+            idx = i; 
+        }
+    };
+    return idx; 
+}
+
+===
 
 Notes: OPTIMAL -> O(log n) using discrete binary search 
 - Pattern: check increasing pattern -> sharp decrease -> increasing again. 

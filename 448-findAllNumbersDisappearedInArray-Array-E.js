@@ -28,12 +28,15 @@ Space: O(n) we use a hashset
 */ 
 
 function findDisappearedNumbers(nums) {
-    if(nums.length === 0) return [];
-    const output = []; 
+    // edge case
+    if(nums.length === 0) return []; 
+    const output = [];
     const hashset = new Set(nums); 
     for(let i = 1; i <= nums.length; i++) {
+        // if hashset doesn't have all indices from 1 until 8 
+        // we know 5, 6 will not be present so we push to output array
         if(!hashset.has(i)) {
-            output.push(i);
+            output.push(i); 
         };
     };
     return output; 
