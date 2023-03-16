@@ -10,7 +10,7 @@ output = -1; there's no index satisfying conditions
 nums = [1, 7, 3, 6, 5, 6]
 output = 3; pivot index at idx3; left: 11; right: 11
 
-Brute Force 
+1. Brute Force 
 - initialize leftSum at 0
 - initialize rightSum at 0
 - iterate over input array once (i at 0 until end)
