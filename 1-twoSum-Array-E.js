@@ -68,6 +68,18 @@ Algorithm
 Time: O(n) where n is # of elements in input array
 Space: O(n) we use a hashmap (data structure) 
 
+3. Spin off... do we want to return the numbers that add up to target? 
+- use a hashmap to store current elements 
+- iterate over input array once (i at 0 until end)
+-- initialize difference as target - current element 
+-- check: if hashmap does NOT have difference? 
+--- hashmap.SET nums[i], nums[i]
+-- else: 
+--- return [hashmap.get(difference), nums[i]
+
+Time: O(n) where n is # of elements in input array
+Space: O(n) we use a hashmap (data structure) 
+
 */ 
 
 function twoSum(nums, target) {
@@ -82,3 +94,21 @@ function twoSum(nums, target) {
         }
     }
 }
+
+console.log(twoSum([2, 7, 9, 11, 15], 26)); // elements at index [3, 4] add up to 26
+
+// SPINOFF 
+// function twoSum(nums, target) {
+//     if(nums.length === 0) return [];
+//     const hashmap = new Map(); 
+//     for(let i = 0; i < nums.length; i++) {
+//         let difference = target - nums[i]; 
+//         if(!hashmap.has(difference)) {
+//             hashmap.set(nums[i], nums[i]); 
+//         } else {
+//             return [hashmap.get(difference), nums[i]]; 
+//         }
+//     }
+// }
+
+// console.log(twoSum([2, 7, 11, 15], 9)); // [2, 7] add up to 9
