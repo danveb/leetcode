@@ -1,10 +1,50 @@
 /* Container With Most Water (Leetcode #11) 
 
-Problem: Given an array "height" of length "n", find two lines that together form a container, such that the container contains the most water. 
+Problem: Given an array "height" of length "n", find two lines that 
+together form a container, such that the container contains the most water. 
 Return the max amount of water a container can store. 
 
 height = [1, 8, 6, 2, 5, 4, 8, 3, 7] 
 output = 49; max area is 7 * 7 
+
+Goal: find the maximum area -> width * high (height) 
+high -> MIN(height[j], height[i])
+width -> j - i 
+area -> high * width 
+max -> MAX area, max 
+
+1. Brute Force 
+- edge case: if height array is empty? return 0
+- use a 2 pointer approach (i, j) where we know i at 0, j at i + 1 
+- calculate high, width, area, max 
+- return max 
+
+Time: O(n^2) where we perform a nested for loop (i, j)
+Space: O(1) we don't incur extra memory 
+
+function maxArea(height) {
+    // initialize max at 0
+    let max = 0; 
+    // iterate over input array once 
+    for(let i = 0; i < height.length; i++) {
+        // iterate again, but j at i + 1 
+        for(let j = i + 1; j < height.length; j++) {
+            // calculate... 
+            // distance = j - i 
+            // h = min between height[j], height[i] 
+            // area = distance * h
+            // max = MAX between max and area 
+            let distance = j - i; 
+            let h = Math.min(height[j], height[i]); 
+            let area = distance * h; 
+            max = Math.max(area, max); 
+        }
+    };
+    // return max 
+    return max; 
+};
+
+=== 
 
 idx     0   1   2   3   4   5   6   7   8
 num     1   8   6   2   5   4   8   3   7   => max at 0, width = R idx - L idx, length = min(R[idx], L[idx]), area = w * l, max = max(max, area)
