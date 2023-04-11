@@ -29,11 +29,12 @@ num     7   1   5   3   6   4
                         i   j   => 4 - 6 = -2; maxP = 5
 
 1. Brute Force
-- perform a nested for loop (i / j) where we calculate i - j
-- we keep track of currentProfit at 0 and update as we calculate
+- perform a nested for loop (i / j) where we calculate j - i (currentProfit)
+- we compare currentProfit (j - i) with maxProfit 
+- if currentProfit > maxProfit -> we set maxProfit to currentProfit 
 
 Algorithm
-- edge case: if prices array is empty we return maxProfit of 0
+- edge case: if prices [] maxProfit of 0
 - initialize currentP at 0
 - initialize maxP at 0
 - iterate over input array once (i at 0 until end)

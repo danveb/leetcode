@@ -7,17 +7,26 @@ output = [5,4,3,2,1]
 
         1 -> 2 -> 3 -> 4 -> 5 -> null 
 
-null -> a -> b -> c -> d -> null 
-null <- a -> b -> c -> d -> null 
-null <- a <- b -> c -> d -> null 
-null <- a <- b <- c -> d -> null 
-null <- a <- b <- c <- d 
+idx     0   1   2   3   4
+num     1   2   3   4   5 -> null 
 
-p       c    n
-        p    c    n 
-            p    c    n
-                    p    c     n
-                        p     c (NULL)
+null <- 1   2   3   4   5 -> null
+p       c                   -> current.next -> prev, prev = current, current = current.next 
+
+null <- 1 <- 2  3   4   5 -> null
+        p    c              -> current.next -> prev, prev = current, current = current.next 
+
+null <- 1 <- 2 <- 3 4   5 -> null
+             p    c         -> current.next -> prev, prev = current, current = current.next 
+
+null <- 1 <- 2 <- 3 <- 4 5 -> null
+                  p    c    -> current.next -> prev, prev = current, current = current.next 
+
+null <- 1 <- 2 <- 3 <- 4 <- 5 -> null
+                       p    c   -> current.next -> prev, prev = current, current = current.next 
+
+null <- 1 <- 2 <- 3 <- 4 <- 5 -> null
+                            p    c  -> we can return prev now and it's the new head 
 
 Approach
 - we want to reverse the linked list so that 1-2-3-4-5 is 5-4-3-2-1
