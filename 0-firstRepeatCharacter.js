@@ -8,6 +8,60 @@ output = "a"
 str = ""
 output = -1
 
+===
+
+1. Brute Force 
+- take 2 for loops (i and j) and loop over the string 
+- check: if current (str[i]) is equal to str[j] we know it's a repeat 
+- we can return the repeat character 
+- else... we return -1 
+
+Time: O(n^2) where we perform a nested for loop (i and j pointers iterating over string twice) 
+Space: O(1) we don't incur extra memory for data structures 
+
+function firstRepeat(str) {
+    for(let i = 0; i < str.length; i++) {
+        let current = str[i]; 
+        for(let j = i + 1; j < str.length; j++) {
+            // check if str[i] === str[j]
+            if(current === str[j]) {
+                return current; 
+            }
+        }
+    };
+    return -1; 
+}
+
+=== 
+
+2. Optimal Approach
+- to avoid nested for loop we can implement a data structure... HASHMAP to count number of occurrences of each character 
+
+function characterCounter(str) {
+    const hashmap = new Map(); 
+    for(let i = 0; i < str.length; i++) {
+        if(hashmap.has(str[i])) {
+            hashmap.set(str[i], hashmap.get(str[i]) + 1); 
+        } else {
+            hashmap.set(str[i], 1); 
+        }; 
+    };
+    return hashmap;  
+}; 
+
+function firstRepeat(str) {
+    // edge case: if str is empty? we return -1 rightaway 
+    if(str.length === 0) return -1; 
+    // initialize frequencyCounter 
+    let freqCounter = characterCounter(str); 
+    // iterate over the key of keys() 
+    for(let key of freqCounter.keys()) {
+        // check: is key >= 2? meaning it's a repeat 
+        if(freqCounter.get(key) >= 2) return key; 
+    };
+    return -1; 
+}
+
 Notes
 1. build characterCounter given the input string 
 - initialize a hashmap 
@@ -23,60 +77,39 @@ Notes
 - check: if characterCounter.get(keys) >= 2 ? we'll return the key 
 - return -1
 
+Time: O(n) where n is length of input string 
+Space: O(n) we use a hashmap as frequency counter 
+
 */ 
 
-// function characterCounter(str) {
-//     const hashmap = new Map(); 
-//     for(let i = 0; i < str.length; i++) {
-//         if(hashmap.has(str[i])) {
-//             hashmap.set(str[i], hashmap.get(str[i]) + 1); 
-//         } else {
-//             hashmap.set(str[i], 1); 
-//         }; 
-//     };
-//     return hashmap;  
-// }; 
-
-// function firstRepeat(str) {
-//     // edge case
-//     if(str.length === 0) return -1; 
-//     let freqCounter = characterCounter(str); 
-//     for(let key of freqCounter.keys()) {
-//         if(freqCounter.get(key) >= 2) {
-//             return key; 
-//         }
-//     }
-
-//     return -1; 
-// }
-
-// console.log(characterCounter("whatsapp")); 
-// console.log(firstRepeat("whatsapp")); 
-// console.log(firstRepeat("acido")); 
-
-function objCharCounter(str) {
-    let obj = {}; 
+function charCounter(str) {
+    const hashmap = new Map(); 
     for(let i = 0; i < str.length; i++) {
-        let current = str[i]
-        if(obj[current]) {
-            obj[current] += 1
+        // !hashmap.has
+        if(!hashmap.has(str[i])) {
+            hashmap.set(str[i], 1); 
+        // hashmap.has
         } else {
-            obj[current] = 1
+            hashmap.set(str[i], hashmap.get(str[i]) + 1); 
+        };
+    }; 
+    return hashmap; 
+}; 
+
+function firstRepeat(str) { 
+    // edge case: if string is empty? return -1 rightaway 
+    if(str.length === 0) return -1; 
+    // instantiate freqCounter 
+    let freqCounter = charCounter(str); 
+    // iterate over the keys of freqCounter 
+    for(let key of freqCounter.keys()) {
+        // check: if key is >= 2? it means it's a repeat 
+        if(freqCounter.get(key) >= 2) {
+            return key; 
         }
-    }
-    return obj; 
-}
+    }; 
+    return -1; 
+};
 
-console.log(objCharCounter("whatsapp")); 
-
-function objFirstRepeat(str) {
-    let obj = objCharCounter(str); 
-    for(let key of Object.keys(obj)) {
-        if(obj[key] >= 2) {
-            return key;
-        }
-    }
-    return -1;
-}
-
-console.log(objFirstRepeat("whatsapp")); 
+console.log(firstRepeat("whatsapp")); // a
+console.log(firstRepeat("macbook")); // o
