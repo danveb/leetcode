@@ -26,20 +26,38 @@ num     1   2   3   4   => X = 1
 - keep track of variable "product" as 1
 - condition: if i === j? we skip as we don't use index
 - condition: if i !== j? we can multiply product by nums[j] 
-- after "j" iteration we can push to output 
+- after "j" iteration we can push to answer 
 
 Algorithm 
 - edge case: if nums array is empty return [] 
-- initialize output [] 
+- initialize answer [] 
 - iterate over input array once (i at 0 until end)
 - iterate over input array again (j at 0 until end) -> both start at 0 since we are going to iterate later everything
 - if: i === j? continue the loop; 
 - multiply product by current element at "j" 
-- push product to output []
-- return output []
+- push product to answer []
+- return answer []
 
 Time: O(n^2) for nested for loop 
-Space: O(n) we store all elements in output array 
+Space: O(n) we store all elements in answer array 
+
+function productExceptSelf(nums) {
+    // edge case: if nums array is empty return []
+    if(nums.length === 0) return [];
+    const answer = []; 
+    for(let i = 0; i < nums.length; i++) {
+        // initialize product at 1; as soon as "j" iteration ends product is back to 1
+        let product = 1;
+        for(let j = 0; j < nums.length; j++) {
+            // check: if i === j? we'll skip 
+            if(i !== j) {
+                product *= nums[j]; 
+            }
+        };
+        answer.push(product); 
+    };
+    return answer; 
+}
 
 === 
 
@@ -61,6 +79,9 @@ rightNums = [1, 1, 1, 1]
                    i     -> to the right is just 4 [4, 1]
                 i        -> to the right is just 12 [12, 4, 1]
              i           -> to the right is just 24 [24, 12, 4, 1]
+
+leftNums    [1, 1, 2, 6]
+rightNums   [24, 12, 4, 1]
 
 output = [24, 12, 8, 6] 
 
